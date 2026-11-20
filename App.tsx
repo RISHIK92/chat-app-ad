@@ -6,7 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ChatListScreen } from './src/ChatListScreen';
 import { ChatScreen } from './src/ChatScreen';
 import { LoginScreen } from './src/LoginScreen';
-import { User, getProfile, setCredentials } from './src/api';
+import { User, getBaseUrl, getProfile, setBaseUrl, setCredentials } from './src/api';
 
 const STORAGE_KEY = 'credentials';
 
@@ -15,10 +15,11 @@ export default function App() {
   const [me, setMe] = useState<User | null>(null);
   const [open, setOpen] = useState<{ id: string; title: string } | null>(null);
 
-  const login = async (username: string, password: string) => {
+  const login = async (username: string, password: string, serverUrl?: string) => {
+    if (serverUrl) setBaseUrl(serverUrl);
     setCredentials(username, password);
     setMe(await getProfile());
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ username, password }));
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ username, password, serverUrl: getBaseUrl() }));
   };
 
   const logout = async () => {
@@ -32,8 +33,8 @@ export default function App() {
       try {
         const saved = await AsyncStorage.getItem(STORAGE_KEY);
         if (saved) {
-          const { username, password } = JSON.parse(saved);
-          await login(username, password);
+          const { username, password, serverUrl } = JSON.parse(saved);
+          await login(username, password, serverUrl);
         }
       } catch {}
       setBooting(false);

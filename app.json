@@ -23,8 +23,14 @@
         "expo-image-picker",
         {
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photos so you can attach them to chats.",
-          "cameraPermission": false,
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera so you can take photos to send in chats.",
           "microphonePermission": false
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone to record voice messages."
         }
       ]
     ],
